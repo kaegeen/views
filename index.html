@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Views Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer>
+        async function fetchViews() {
+            const videoId = document.getElementById('videoId').value;
+            const apiKey = 'YOUR_YOUTUBE_API_KEY';
+
+            if (!videoId) {
+                alert('Please enter a YouTube video ID.');
+                return;
+            }
+
+            const url = `https://www.googleapis.com/youtube/v3/videos?part=statistics&id=${videoId}&key=${apiKey}`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.items && data.items.length > 0) {
+                    const views = data.items[0].statistics.viewCount;
+                    document.getElementById('viewsOutput').textContent = `Views: ${views}`;
+                } else {
+                    document.getElementById('viewsOutput').textContent = 'No data found for this video ID.';
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                document.getElementById('viewsOutput').textContent = 'Error fetching data. Please try again later.';
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation Bar -->
+    <nav class="bg-blue-500 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-white text-2xl font-bold">YouTube Views Tracker</h1>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-bold text-center mb-8">Check Your YouTube Video Views</h2>
+            <div class="max-w-lg mx-auto bg-white shadow-lg rounded-lg p-8">
+                <div class="mb-4">
+                    <label for="videoId" class="block text-gray-700 font-bold mb-2">YouTube Video ID</label>
+                    <input type="text" id="videoId" class="w-full p-3 border rounded-lg" placeholder="Enter your video ID">
+                </div>
+                <button 
+                    onclick="fetchViews()"
+                    class="w-full px-4 py-2 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-600">
+                    Get Views
+                </button>
+                <p id="viewsOutput" class="mt-4 text-center text-gray-700 font-bold"></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-blue-500 text-white text-center py-4">
+        <p>&copy; 2025 YouTube Views Tracker. All rights reserved.</p>
+    </footer>
+</body>
+</html>
